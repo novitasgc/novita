@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novita</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&family=Sanchez:ital@0;1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Rajdhani:wght@300;400;500;600;700&family=Sanchez:ital@0;1&display=swap');
+
+        body{
+            margin:0;
+            font-family: "Abril Fatface", serif;
+            font-style: normal;
+            overflow: hidden; /*to hide the scroll*/
+        }
+
+        /*Sidebar*/
+        #sidebar {
+            position: fixed;
+            right: 0; 
+            width: 20%;
+            min-width: 250px; 
+            height: 100vh; 
+            background-color: #333; 
+            color: white;
+            transform: translateX(100%); 
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px; /* Space for fixed header */
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3); /* Add shadow for better separation */
+        }
+
+        #sidebar.active {
+            transform: translateX(0);
+        }
+
+        #sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 5px; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #sidebar a:hover,
+        #sidebar a:focus {
+            background-color: #555; 
+            color: #fff; 
+        }
+
+        #sidebar .logo {
+            margin-bottom: 40px; 
+        }
+
+        #sidebar .logo img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        /*to add the 3 lines for sidebar*/
+        .hamburger {
+            position: fixed;
+            top: 15px;
+            right: 15px; /* Move to the right */
+            cursor: pointer;
+            z-index: 1100;
+        }
+
+        .hamburger div {
+            width: 30px;
+            height: 3px;
+            background: white;
+            margin: 6px 0;
+            transition: 0.3s;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 6px); /* Adjusted for right sidebar */
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -6px); /* Adjusted for right sidebar */
+        }
+
+        #section1, #section2, #section3, #section4, #section5, #section6 {
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            position: relative; /* Needed for absolute positioning of elements inside */
+        }
+
+        /*section1 starts*/
+        #section1 {
+            background-image: url('section1.svg');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+        }
+
+        .logo {
+            position: absolute;
+            top: 10px; 
+            left: 20px;
+            width: 3%; 
+            height: auto; 
+        }
+
+        .square{ /*text containter section1*/
+            width:85%;
+            height:85%;
+        }
+
+        .rounded-square{
+            width: 90%; 
+            height: 85%;
+            z-index:1;
+            border: 5px solid white;
+            border-radius: 20px; 
+            position: absolute; 
+            box-sizing: border-box; 
+        }
+
+        .moon-image-container {
+            position: absolute; 
+            bottom: 0; 
+            top: 2%; 
+            height: auto; 
+            z-index: 2; 
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px); /* Adjust the value to control the float distance */
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .moons1 {
+            width: 100%;
+            animation: float 3s ease-in-out infinite; 
+        }
+
+
+        @keyframes slideInFromRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .dots-container {
+            position: fixed;
+            right: 20px; 
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px; 
+            z-index: 4; 
+        }
+
+        .dot {
+            width: 10px; 
+            height: 10px; 
+            background-color: white;
+            border-radius: 50%; 
+            transition: transform 0.3s ease; 
+            cursor: pointer; 
+        }
+
+        .portfolio {
+            color: white;
+            size: 10%;
+            padding:2%;
+            font-family: "Sanchez", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .main {
+            position: relative; 
+            margin-left: 50%;
+            margin-top:2%;
+            width:50%;
+            color: white;
+            z-index: 3; 
+        }
+
+        .welcome{
+            font-family: "Abril Fatface", serif;
+          font-weight: 400;
+          font-style: normal;
+          font-size: 120%;
+          animation-delay: 0.5s;
+          animation: slideInFromRight 2s ease-out forwards;
+        }
+
+        .name{
+        font-family: "Abril Fatface", serif;
+          font-weight: 700;
+          font-style: normal;
+          font-size: 300%;
+          animation-delay: 0.7s;
+          animation: slideInFromRight 2s ease-out forwards;
+        }
+
+        
+        .job{
+            font-family: "Abril Fatface", serif;
+          font-weight: 300;
+          font-style: normal;
+          animation-delay: 0.9s;
+          animation: slideInFromRight 2s ease-out forwards;
+          font-size: 60%;
+        }
+
+        .navigate-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px; 
+            border: 2px solid white; 
+            border-radius: 25px; 
+            background-color: transparent; 
+            color: white; 
+            cursor: pointer; 
+            margin-top: 5%; 
+            text-align: center; 
+            text-decoration: none; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: "Sanchez", serif;
+            font-weight: 400;
+            font-style: normal;
+            animation-delay: 1s;
+            animation: slideInFromRight 2s ease-out forwards;
+        }
+
+        .navigate-button:hover {
+            background-color: white; 
+            color: black; 
+        }
+
+        /*section2 starts*/
+        #section2 {
+            background: url('section2.svg');
+            color: rgb(0, 0, 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            background-size: cover;
+            background-position: bottom;
+            background-repeat: no-repeat;
+        }
+
+        .education {
+            font-size: 2em; 
+            color: white; 
+            text-align: center;
+            letter-spacing: 2px; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6); /* Glow effect */
+            margin: 20px 0; 
+        }
+
+        .trees-container {
+            position: absolute;
+            width: 110%;
+            animation: float 2s ease-in-out infinite; /*use the same animation with moon1.svg*/
+            z-index:2;
+        }
+
+        .trees-image {
+            width: 100%;
+            height: auto;
+            margin: 0;
+        }
+
+        .timeline {
+            max-width: 100%;
+            width: 50%;
+            padding: 10px;
+            margin-bottom:5%;
+            z-index: 4;
+            
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #fff;
+            transform: translateX(-50%);
+        }
+
+        .timeline-content {
+            position: relative;
+            width: 42%;
+            padding: 20px;
+            background: rgb(255, 255, 255);
+            border-radius: 6px;
+            transition: box-shadow 0.3s ease, transform 0.3s ease; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+
+        .timeline-content:hover { /*for animation*/
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+            transform: translateY(-10px); 
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {/*make it right*/
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {/*make it left*/
+            margin-right: 0;
+            margin-left: auto;
+        }
+
+        .year {
+            margin-top: 0;
+            font-family: "Sanchez", serif;
+        }
+
+        .desc {
+            margin-top: 0;
+            font-family: "Sanchez", serif;
+            font-size:50%;
+        }
+
+        /*section3 starts*/
+
+        /*section4 starts*/
+        .section4{
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+        }
+
+        .text-container {
+            position: absolute;
+            left: 10%;
+            color: white;
+            z-index: 2;
+        }
+
+        .text-container h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .text-container p {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .text-container .buttons {
+            margin-top: 20px;
+        }
+
+        .text-container .buttons a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 10px 20px;
+            background-color: #ff5733;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .text-container .buttons a:hover {
+            background-color: #c13b24;
+        }
+
+        .slider {
+            position: absolute;
+            right: 10%;
+            width: 300px; 
+            height: 400px; 
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            opacity: 0;
+            transform: scale(0.8) translateX(20%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+            z-index: 2;
+        }
+
+        .slide.next {
+            opacity: 1;
+            transform: scale(0.9) translateX(-10%);
+            z-index: 1;
+        }
+
+        .navigation {
+            position: absolute;
+            width: 90%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 3;
+        }
+
+        .nav-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        
+
+
+
+
+        
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div id="sidebar">
+        <div class="logo">
+            <img src="logo.svg" alt="Logo">
+        </div>
+        
+        <a href="#section1" data-target="section1">Home</a>
+        <a href="#section2" data-target="section2">Experiences</a>
+        <a href="#section3" data-target="section3">Skills</a>
+        <a href="#section4" data-target="section4">Design</a>
+        <a href="#section5" data-target="section5">Coding</a>
+        <a href="#section6" data-target="section6">About</a>
+    </div>
+
+    <div class="dots-container">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div id="section1">
+        <div class="rounded-square"></div>
+        <div class="square">
+            <div class="portfolio">Portfolio.</div>
+            <div class="main">
+                <div class="welcome">
+                    WELCOME TO MY PORTFOLIO
+                </div>
+                <div class="name">
+                    I'M NOVITA
+                </div>
+                <div class="job">
+                    I am into Web Designer with a passion to develop more interactive websites and designs.
+                </div>
+                <a href="#section6" id="about-button"><button class="navigate-button">About Me</button></a>
+            </div>
+        </div>
+        <img src="logo.svg" alt="Logo" class="logo"> 
+        <div class="moon-image-container">
+            <img src="moons1.svg" class="moons1" alt="Moons Image"> 
+        </div>
+    </div>
+
+    <div id="section2">
+        <div class="timeline">
+            <div class="education">EDUCATION</div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="year">2018</div>
+                    <div class="desc">High School</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="year">2018</div>
+                    <div class="desc">High School</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="year">2018</div>
+                    <div class="desc">High School</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="year">2018</div>
+                    <div class="desc">High School</div>
+                </div>
+            </div>
+        </div>
+        <div class="trees-container">
+            <img src="trees2.svg" alt="Trees Image" class="trees-image">
+        </div>
+        
+    </div>
+
+    <div class="section4" id="section4">
+        <div class="text-container" id="text-container">
+            <h1 id="slider-title">Title 1</h1>
+            <p id="slider-description">This is the description for Slide 1.</p>
+            <div class="buttons">
+                <a href="#" id="button1">Learn More</a>
+            </div>
+        </div>
+
+        <div class="slider" id="slider">
+            <div class="slide active" style="background-image: url('image1.jpg');"></div>
+            <div class="slide" style="background-image: url('image2.jpeg');"></div>
+            <div class="slide" style="background-image: url('image3.jpg');"></div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" onclick="prevSlide()">&#10094;</button>
+            <button class="nav-button" onclick="nextSlide()">&#10095;</button>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        let currentSection = 0; // Start with the first section
+        const sections = document.querySelectorAll('#section1, #section2, #section3, #section4, #section5, #section6');
+        const dots = document.querySelectorAll('.dot'); 
+
+        function scrollToSection(index) {
+            sections[index].scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                if (index === currentSection) {
+                    dot.style.transform = 'scale(1.5)'; 
+                } else {
+                    dot.style.transform = 'scale(1)'; 
+                }
+            });
+        }
+
+        function handleNavigationClick(event) {
+            event.preventDefault();
+            const targetId = this.getAttribute('data-target');
+            const targetIndex = Array.from(sections).findIndex(section => section.id === targetId);
+            
+            if (targetIndex !== -1 && targetIndex !== currentSection) {
+                currentSection = targetIndex;
+                scrollToSection(currentSection);
+                updateDots();
+            }
+        }
+
+        function handleImmediateScrollToSection6() {
+            currentSection = Array.from(sections).findIndex(section => section.id === 'section6');
+            scrollToSection(currentSection);
+            updateDots();
+        }
+
+        document.querySelectorAll('#sidebar a').forEach(anchor => {
+            anchor.addEventListener('click', handleNavigationClick);
+        });
+
+        document.getElementById('about-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            handleImmediateScrollToSection6();
+        });
+
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) {
+                // Scroll down
+                if (currentSection < sections.length - 1) {
+                    currentSection++;
+                    scrollToSection(currentSection);
+                    updateDots();
+                }
+            } else {
+                // Scroll up
+                if (currentSection > 0) {
+                    currentSection--;
+                    scrollToSection(currentSection);
+                    updateDots();
+                }
+            }
+            e.preventDefault(); // Prevent the default scroll behavior
+        }, { passive: false });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                if (currentSection < sections.length - 1) {
+                    currentSection++;
+                    scrollToSection(currentSection);
+                    updateDots();
+                }
+            } else if (e.key === 'ArrowUp') {
+                if (currentSection > 0) {
+                    currentSection--;
+                    scrollToSection(currentSection);
+                    updateDots();
+                }
+            }
+        });
+
+        const hamburger = document.querySelector('.hamburger');
+        const sidebar = document.querySelector('#sidebar');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // for dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                if (index !== currentSection) {
+                    currentSection = index;
+                    scrollToSection(currentSection);
+                    updateDots();
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const section1 = document.getElementById('section1');
+            const elementsToAnimate = section1.querySelectorAll('.welcome, .name, .job, .navigate-button');
+            const section1Offset = section1.offsetTop;
+            const section1Height = section1.offsetHeight;
+
+            function handleScroll() {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                
+                if (scrollPosition > section1Offset + section1Height && scrollPosition < section1Offset + section1Height * 2) {
+                    elementsToAnimate.forEach(element => {
+                        element.classList.remove('slide-in-from-right');
+                        element.classList.add('slide-out-to-right');
+                    });
+                } else {
+                    elementsToAnimate.forEach(element => {
+                        element.classList.remove('slide-out-to-right');
+                        element.classList.add('slide-in-from-right');
+                    });
+                }
+            }
+
+            window.addEventListener('scroll', handleScroll);
+            handleScroll(); 
+        });
+
+        let currentSlide = 0;
+        const slider = document.getElementById('slider');
+        const sliderContainer = document.getElementById('section4');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        const backgrounds = [
+            'url("image1.jpg")',
+            'url("image2.jpeg")',
+            'url("image3.jpg")'
+        ];
+
+        const titles = [
+            'Title 1',
+            'Title 2',
+            'Title 3'
+        ];
+
+        const descriptions = [
+            'This is the description for Slide 1.',
+            'This is the description for Slide 2.',
+            'This is the description for Slide 3.'
+        ];
+
+        const buttons = [
+            '<a href="#" id="button1">Learn More</a>',
+            '<a href="#" id="button2">Discover</a>',
+            '<a href="#" id="button3">Get Started</a>'
+        ];
+
+        function updateSliderPosition() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                    slide.classList.remove('next');
+                } else if (index === (currentSlide + 1) % totalSlides) {
+                    slide.classList.add('next');
+                    slide.classList.remove('active');
+                } else {
+                    slide.classList.remove('active', 'next');
+                }
+            });
+
+            // Update background
+            sliderContainer.style.backgroundImage = backgrounds[currentSlide];
+
+            // Update title and description
+            document.getElementById('slider-title').innerText = titles[currentSlide];
+            document.getElementById('slider-description').innerText = descriptions[currentSlide];
+
+            // Update buttons
+            document.querySelector('.buttons').innerHTML = buttons[currentSlide];
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSliderPosition();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSliderPosition();
+        }
+
+        updateSliderPosition();
+
+        // Auto-slide every 3 seconds
+        setInterval(nextSlide, 6000);
+
+
+
+    </script>
+</body>
+</html>
